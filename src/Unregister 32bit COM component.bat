@@ -1,1 +1,1 @@
-regsvr32 -u Debug\32BitComLibrary.dll
+regsvr32 -u %~dp0Debug\32BitComLibrary.dll
