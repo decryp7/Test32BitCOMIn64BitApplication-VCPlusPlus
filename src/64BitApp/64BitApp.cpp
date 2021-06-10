@@ -2,6 +2,8 @@
 //
 
 #include "stdafx.h"
+
+#include <chrono>
 #include <iostream>
 using namespace std;
 
@@ -26,12 +28,27 @@ int main()
 	CoInitializeEx(0, COINIT_MULTITHREADED);
 
 	{
+		using std::chrono::high_resolution_clock;
+		using std::chrono::duration_cast;
+		using std::chrono::duration;
+		using std::chrono::milliseconds;
+
 		IUserSecurityPtr ptr;
 		HRESULT hr = ptr.CreateInstance(__uuidof(UserSecurity));
 		if (SUCCEEDED(hr))
 		{
-			cout << ptr->SayHello() << endl;
-		}else
+			auto t1 = high_resolution_clock::now();
+			auto hello = ptr->SayHello();
+			auto t2 = high_resolution_clock::now();
+
+			cout << hello << endl;
+
+			/* Getting number of milliseconds as a double. */
+			duration<double, std::milli> ms_double = t2 - t1;
+
+			std::cout << ms_double.count() << "ms";
+		}
+		else
 		{
 			ErrorDescription(hr);
 		}
@@ -39,7 +56,7 @@ int main()
 		char c;
 		cin >> c;
 	}
-
+	
 	CoUninitialize();
 
 	return 0;
